@@ -1,0 +1,47 @@
+class Solution {
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+    Set<String> wordSet = new HashSet<>();
+    for(String aWord: wordList) {
+        wordSet.add(aWord);
+    }   
+    Queue<String> queue = new LinkedList<>();
+    queue.offer(beginWord);
+    int distance = 1;
+    while (!queue.isEmpty() && !wordSet.isEmpty()) {
+        Queue<String> queue2 = new LinkedList<>();
+        distance++;
+        while (!queue.isEmpty()) {
+            String top = queue.poll();
+            ArrayList<String> wordsWithinDistance =
+                getWordsWithinDistance(wordSet, top);
+            if (wordsWithinDistance.contains(endWord)) {
+                return distance;
+            }
+            queue2.addAll(wordsWithinDistance);
+        }
+        queue = queue2;
+    }
+    return 0;
+    }
+    
+    public ArrayList<String> getWordsWithinDistance(Set<String> wordSet, String word) {
+    ArrayList<String> results = new ArrayList<>();
+    char[] wordCharArr = word.toCharArray();
+    for (int i = 0; i < word.length(); i++) {
+        char oriChar = wordCharArr[i];
+        for (char c = 'a'; c <= 'z'; c++) {
+            if (c == oriChar) {
+                continue;
+            }
+            wordCharArr[i] = c;
+            String newStr = new String(wordCharArr);
+            if (wordSet.contains(newStr)) {
+                results.add(newStr);
+                wordSet.remove(newStr);
+            }
+        }
+        wordCharArr[i] = oriChar;
+    }
+    return results;
+    }  
+}
